@@ -98,34 +98,41 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
               isAddingNewPlaylist={isAddingNewPlaylist}
               refreshPlaylists={onRefreshPlaylist}
             >
-              <Text type='h1' className={classNames(styles.text)}>
-                Your playlists
-              </Text>
-              {filteredPlaylists.length ? (
-                <div className={classNames(styles.playlists)}>
-                  {filteredPlaylists.map((playlist, idx) => {
-                    return (
-                      <div
-                        key={idx}
-                        className={classNames(styles.playlistCard)}
-                      >
-                        <Button
-                          className={classNames(styles.playlistSelectButton)}
-                          onClick={() =>
-                            onPlaylistSelect(playlist.id, playlist.name)
-                          }
-                        >
-                          {playlist.name}
-                        </Button>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
+              <div className={classNames(styles.modalHeader)}>
                 <Text type='h1' className={classNames(styles.text)}>
-                  Please create at least one playlist
+                  Your playlists
                 </Text>
-              )}
+              </div>
+              <div className={classNames(styles.modalBody)}>
+                {filteredPlaylists.length ? (
+                  <div className={classNames(styles.playlists)}>
+                    {filteredPlaylists.slice(0, 50).map((playlist, idx) => {
+                      return (
+                        <div
+                          key={idx}
+                          className={classNames(styles.playlistCard, styles.column)}
+                             onClick={() =>
+                              onPlaylistSelect(playlist.id, playlist.name)
+                            }
+                        >
+                          <div className={classNames(styles.row)}>
+
+                            <img className={classNames(styles.playlistSearchPreview)} src={playlist.images[0]?.url} alt={playlist.name} />
+                            <p>{playlist.name}</p>
+                          </div>
+                          <Button className={classNames(styles.playlistSelectButton)}>
+                            Add Bind
+                          </Button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <Text type='h1' className={classNames(styles.text)}>
+                    Please create at least one playlist
+                  </Text>
+                )}
+              </div>
             </Modal>
           ) : (
             <>

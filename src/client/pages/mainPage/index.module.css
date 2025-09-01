@@ -7,9 +7,6 @@
 
 .container {
   background-color: rgba(0, 0, 0, 0.148);
-  border-radius: 25px;
-  width: 200px;
-  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,19 +75,97 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 250px;
+  width: 100%;
+  max-width: 250px;
+  min-height: 90px;
+  height: 100%;
+  padding: 5px;
+
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 }
 
-.playlistSelectButton {
-  border-radius: 100%;
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.playlistSearchPreview {
+  border-radius: 100%;
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+}
+
+
+.playlistSelectButton {
+  border-radius: 25px;
+  width: 100%;
+  min-height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.playlistSelectButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transform: scale(1.02);
+}
+
 
 .playlists {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  place-items: center;
-  place-content: center;
-  height: 200px;
-  width: 600px;
-  gap: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1400px;
+  justify-items: center;
+  align-items: start;
+  max-height: none;
+ padding-bottom: 130px;
+}
+
+.modalHeader {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 5;
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7), transparent);
+  padding: 70px 0 30px 0;
+  backdrop-filter: blur(2px);
+}
+
+.modalBody {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  flex-grow: 1;
+  padding: 20px; 
+  min-height: 0;
 }

@@ -373,11 +373,11 @@ export const fetchPlaylists = () => {
 
       const userId = request.data.href.split('/')[5]
 
-      const ownedPlaylists: Playlist[] = request.data.items.filter((item: any) => item.owner.id === userId) // TODO: Collaborative playlists can be not be included. Not sure.
+      const ownedPlaylists = request.data.items.filter((item: any) => item.owner.id === userId) // TODO: Collaborative playlists can be not be included. Not sure.
 
-      const formatedPlaylists: Playlist[] = ownedPlaylists.map(
-        item => {
-          return { id: item.id, name: item.name }
+      const formatedPlaylists = ownedPlaylists.map(
+       (item: any) => {
+          return { id: item.id, name: item.name, images: item.images }
         },
       )
 
