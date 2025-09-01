@@ -37,5 +37,10 @@
         "jsx-quotes": ["error", "prefer-single"]
       }
     }
-  ]
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }
