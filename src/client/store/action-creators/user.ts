@@ -18,7 +18,7 @@ interface secondOptions {
 const fetchAllTracks = async (
   options: secondOptions,
   dispatch: Dispatch<userAction>,
-  playlistId: string
+  playlistId: string,
 ) => {
   if (!options.next) {
     dispatch({
@@ -95,7 +95,7 @@ export const setBind = (playlistId: string, bind: string) => {
   return async (dispatch: Dispatch<userAction>, getState: GetState) => {
     const state = getState()
     const playlist = state.user.selectedPlaylists.find(
-      ({ playlistId: id }) => id === playlistId
+      ({ playlistId: id }) => id === playlistId,
     )
 
     if (playlist.bind === bind) return
@@ -104,9 +104,9 @@ export const setBind = (playlistId: string, bind: string) => {
 
     playlistLine = playlistLine.replace(
       new RegExp(
-        `(?<=\\")(${playlist.playlistId}:${playlist.playlistName}.*?)(?=\\")`
+        `(?<=\\")(${playlist.playlistId}:${playlist.playlistName}.*?)(?=\\")`,
       ),
-      `${playlist.playlistId}:${playlist.playlistName}:${bind}`
+      `${playlist.playlistId}:${playlist.playlistName}:${bind}`,
     )
 
     localStorage.setItem('playlists', playlistLine)
@@ -148,7 +148,7 @@ export const removePlaylist = (playlistId: string) => {
   return async (dispatch: Dispatch<userAction>, getState: GetState) => {
     const state = getState()
     const playlist = state.user.selectedPlaylists.find(
-      ({ playlistId: id }) => id === playlistId
+      ({ playlistId: id }) => id === playlistId,
     )
 
     window.api.remove(`add-track-${playlistId}`)
@@ -157,9 +157,9 @@ export const removePlaylist = (playlistId: string) => {
 
     playlistLine = playlistLine.replace(
       new RegExp(
-        `"(?<=\\")(${playlist.playlistId}:${playlist.playlistName}.*?)(?=\\")"`
+        `"(?<=\\")(${playlist.playlistId}:${playlist.playlistName}.*?)(?=\\")"`,
       ),
-      ''
+      '',
     )
 
     localStorage.setItem('playlists', playlistLine)
@@ -201,7 +201,7 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
       },
     })
 
-    let playlistLine = localStorage.getItem('playlists')
+    const playlistLine = localStorage.getItem('playlists')
 
     if (!playlistLine) {
       localStorage.setItem('playlists', `"${playlist.id}:${playlist.name}"`)
@@ -210,8 +210,8 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
         'playlists',
         playlistLine.replace(
           new RegExp(`"(?<=\\")(${playlist.id}:${playlist.name}.*?)(?=\\")"`),
-          ''
-        ) + ` "${playlist.id}:${playlist.name}"`
+          '',
+        ) + ` "${playlist.id}:${playlist.name}"`,
       )
     }
 
@@ -243,7 +243,7 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
         }
 
         const selectedPlaylist = state.user.selectedPlaylists.find(
-          ({ playlistId: id }) => id === playlist.id
+          ({ playlistId: id }) => id === playlist.id,
         )
 
         if (
@@ -381,16 +381,23 @@ export const fetchPlaylists = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${state.user.accessToken}`,
+            Authorization: `Bearer ${state.user.accessToken}`,
           },
-        }
+        },
       )
 
-      const formatedPlaylists: Playlist[] = request.data.items.map(
-        //@ts-ignore
+      if (!request.data.items || !request.data.items.length || !request.data.href) {
+        throw new Error(request.data.error.message || 'Unknown error')
+      }
+
+      const userId = request.data.href.split('/')[5]
+
+      const ownedPlaylists: Playlist[] = request.data.items.filter((item: any) => item.owner.id === userId) // TODO: Collaborative playlists can be not be included. Not sure.
+
+      const formatedPlaylists: Playlist[] = ownedPlaylists.map(
         item => {
           return { id: item.id, name: item.name }
-        }
+        },
       )
 
       dispatch({
@@ -449,7 +456,7 @@ export const loginUser = ({ code, accessToken, req }: options) => {
 
         localStorage.setItem(
           'expiresIn',
-          `${Date.now() + body.expires_in * 1000}`
+          `${Date.now() + body.expires_in * 1000}`,
         )
         localStorage.setItem('refreshToken', body.refresh_token)
         localStorage.setItem('accessToken', body.access_token)
