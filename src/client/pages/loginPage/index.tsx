@@ -16,6 +16,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
       [
         'playlist-modify-private',
         'playlist-modify-public',
+        'playlist-read-private',
         'user-read-currently-playing',
       ],
       'state'
