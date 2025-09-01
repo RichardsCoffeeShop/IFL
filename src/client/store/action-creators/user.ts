@@ -379,7 +379,7 @@ export const fetchPlaylists = () => {
 
       const formatedPlaylists: Playlist[] = ownedPlaylists.map(
        item => {
-          return { id: item.id, name: item.name, images: item.images }
+          return { id: item.id, name: item.name, images: item.images ?? [{ url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png' }] }
         },
       )
 
