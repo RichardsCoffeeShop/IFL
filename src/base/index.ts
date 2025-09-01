@@ -6,9 +6,11 @@ import {
   ipcMain,
   Notification,
   autoUpdater,
+  session,
 } from 'electron'
 import electronIsDev from 'electron-is-dev'
 import { createWindow, envPath } from './utils'
+import path from 'path'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -21,9 +23,16 @@ config({ path: envPath() })
 
 app
   .on('ready', () => {
+
+    session.defaultSession.protocol.registerFileProtocol('static', (request, callback) => {
+      const fileUrl = request.url.replace('static://', '')
+      const filePath = path.join(app.getAppPath(), '.webpack/public', fileUrl)
+      callback(filePath)
+    })
+  
     const win = createWindow(
       MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-      MAIN_WINDOW_WEBPACK_ENTRY
+      MAIN_WINDOW_WEBPACK_ENTRY,
     )
 
     if (!electronIsDev) {

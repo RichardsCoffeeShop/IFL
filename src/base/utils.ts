@@ -11,7 +11,7 @@ export const createTray = (window: BrowserWindow) => {
     new MenuItem({
       label: 'Exit app',
       click: () => app.exit(0),
-    })
+    }),
   )
 
   tray.setContextMenu(menu)
@@ -56,7 +56,6 @@ export const createWindow = (preloadPath: string, urlPath: string) => {
         frame: false,
         resizable: false,
         autoHideMenuBar: true,
-        transparent: true,
         webPreferences: {
           devTools: true,
           contextIsolation: true,
@@ -73,7 +72,6 @@ export const createWindow = (preloadPath: string, urlPath: string) => {
         icon: APP_ICON,
         frame: false,
         autoHideMenuBar: true,
-        transparent: true,
         webPreferences: {
           devTools: !app.isPackaged,
           contextIsolation: true,
