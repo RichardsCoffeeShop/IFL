@@ -13,7 +13,7 @@ module.exports = {
       name: "@electron-forge/publisher-github",
       config: {
         repository: {
-          owner: "sekkure",
+          owner: "RichardsCoffeeShop",
           name: "IFL",
         },
         authToken: process.env.GITHUB_TOKEN,
