@@ -17,11 +17,17 @@ export interface Track {
 export interface Playlist {
   name: string
   id: string
+  images: {
+    url: string
+  }[]
 }
 
 export interface SelectedPlaylist {
   playlistId: string
   playlistName: string
+  playlistImages: {
+    url: string
+  }[]
   isCaching: boolean
   tracks: Track[]
   bind: string

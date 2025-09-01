@@ -106,6 +106,7 @@ export const setBind = (playlistId: string, bind: string) => {
     parsed[playlistId] = {
       name: playlist.playlistName,
       bind,
+      images: playlist.playlistImages,
     }
 
     localStorage.setItem('playlists-binds-json', JSON.stringify(parsed))
@@ -184,6 +185,7 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
         isCaching: false,
         playlistId: playlist.id,
         playlistName: playlist.name,
+        playlistImages: playlist.images,
         error: null,
         tracks: [],
       },
@@ -373,10 +375,10 @@ export const fetchPlaylists = () => {
 
       const userId = request.data.href.split('/')[5]
 
-      const ownedPlaylists = request.data.items.filter((item: any) => item.owner.id === userId) // TODO: Collaborative playlists can be not be included. Not sure.
+      const ownedPlaylists: Playlist[] = request.data.items.filter((item: any) => item.owner.id === userId) // TODO: Collaborative playlists can be not be included. Not sure.
 
-      const formatedPlaylists = ownedPlaylists.map(
-       (item: any) => {
+      const formatedPlaylists: Playlist[] = ownedPlaylists.map(
+       item => {
           return { id: item.id, name: item.name, images: item.images }
         },
       )

@@ -45,36 +45,39 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
     setToDisplayTracks(tracks.slice(-5).reverse())
   }, [tracks.length])
 
+
+  const playlistImage = playlist.playlistImages[0]?.url || toDisplayTracks[0]?.img
+
   return (
     <div className={classNames(styles.container)}>
       <div className={classNames(styles.playlistCard)} {...props}>
         {error && (
-          <Text type="h5" className={classNames(styles.errorText)}>
+          <Text type='h5' className={classNames(styles.errorText)}>
             {error}
           </Text>
         )}
         <div className={classNames(styles.playlistCardHeader)}>
           <img
-            src={toDisplayTracks[0] ? toDisplayTracks[0].img : null}
+            src={playlistImage}
             className={classNames({
-              [styles.playlistCardHeaderImage]: toDisplayTracks[0],
-              [styles.hideImage]: !toDisplayTracks[0],
+              [styles.playlistCardHeaderImage]: playlistImage,
+              [styles.hideImage]: !playlistImage,
               [styles.removeBorderRadius]: error,
             })}
           />
 
-          <Text className={classNames(styles.text)} type="h3">
+          <Text className={classNames(styles.text)} type='h3'>
             {playlistName}
           </Text>
           <svg
             className={classNames(styles.removeButton)}
             onClick={onRemovePlaylist}
-            viewBox="0 0 512 512"
+            viewBox='0 0 512 512'
           >
-            <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z" />
+            <path d='M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z' />
           </svg>
           <Input
-            placeholder="Bind"
+            placeholder='Bind'
             value={stateBind}
             onChange={() => {}}
             onKeyDownCapture={onBindChange}
@@ -84,13 +87,31 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
         <div className={classNames(styles.playlistCardBody)}>
           <div>
             {isCaching ? (
-              <Text type="h1">CACHING...</Text>
+              <Text type='h5' className={classNames(styles.statusText)}>CACHING...</Text>
             ) : toDisplayTracks.length ? (
-              toDisplayTracks.map((track, idx) => (
-                <Track key={idx} track={track} idx={idx} />
-              ))
+              <div className={classNames(styles.tracksList)}>
+                <Text type='h5' className={classNames(styles.tracksHeader)}>Recent tracks:</Text>
+                {toDisplayTracks.map((track, idx) => (
+                  <div key={idx} className={classNames(styles.compactTrack)}>
+                    <img
+                      src={track.img}
+                      className={classNames(styles.smallTrackImage)}
+                      onClick={() => window.api.utils.openInBrowser(track.img)}
+                      title='Click to view image'
+                    />
+                    <div className={classNames(styles.trackInfo)}>
+                      <Text type='h6' className={classNames(styles.trackArtist)}>
+                        {track.artists}
+                      </Text>
+                      <Text type='h6' className={classNames(styles.trackName)}>
+                        {track.name}
+                      </Text>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
-              <Text type="h1">Playlist is empty</Text>
+              <Text type='h5' className={classNames(styles.statusText)}>Playlist is empty</Text>
             )}
           </div>
         </div>

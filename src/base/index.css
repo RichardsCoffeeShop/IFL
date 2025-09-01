@@ -1,8 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
 
 body {
-  background: url(https://images.pexels.com/photos/176851/pexels-photo-176851.jpeg)
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.3), rgb(41, 39, 41)), 
+    url('https://konachan.net/image/1fcda7d1b91b0d2c82773f1ba29f6675/Konachan.com%20-%20378636%20barefoot%20braids%20breasts%20cleavage%20collar%20computer%20cross%20drink%20glasses%20gloves%20gray_hair%20greedice%20hood%20navel%20original%20planet%20shorts%20sketch%20space.jpg') 
     no-repeat center center fixed;
+    
+  background-size: cover; 
+
+  background-color: rgb(32, 32, 32);
 
   margin: 0%;
   padding: 0%;

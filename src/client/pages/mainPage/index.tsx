@@ -19,17 +19,14 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
   const [filteredPlaylists, setFilteredPlaylists] = useState([])
   const [displayModal, setDisplayModal] = useState(false)
 
-  const onPlaylistSelect = (id: string, name: string) => {
+  const onPlaylistSelect = (playlist: Playlist) => {
     if (
-      id === 'Select playlist' ||
-      selectedPlaylists.find(({ playlistId }) => playlistId === id)
+      playlist.id === 'Select playlist' ||
+      selectedPlaylists.find(({ playlistId }) => playlistId === playlist.id)
     )
       return
 
-    onEditPlaylistId({
-      id,
-      name,
-    })
+    onEditPlaylistId(playlist)
 
     if (isAddingNewPlaylist) setAddingNewPlaylist()
   }
@@ -46,7 +43,7 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
 
   useEffect(() => {
     const playlists = localStorage.getItem('playlists-binds-json')
-    const parsed: { [key: string]: { name: string; bind: string } } = JSON.parse(playlists) ?? {}
+    const parsed: { [key: string]: { name: string; bind: string, images: { url: string }[] } } = JSON.parse(playlists) ?? {}
 
     for (const [id, data] of Object.entries(parsed)) {
       if (!data.name || !data.bind) continue
@@ -54,6 +51,7 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
       setSelectedPlaylist({
         id,
         name: data.name,
+        images: data.images,
       })
 
       if (data.bind) setBind(id, data.bind)
@@ -112,7 +110,7 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
                           key={idx}
                           className={classNames(styles.playlistCard, styles.column)}
                              onClick={() =>
-                              onPlaylistSelect(playlist.id, playlist.name)
+                              onPlaylistSelect(playlist)
                             }
                         >
                           <div className={classNames(styles.row)}>
