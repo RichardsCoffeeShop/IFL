@@ -100,16 +100,15 @@ export const setBind = (playlistId: string, bind: string) => {
 
     if (playlist.bind === bind) return
 
-    let playlistLine = localStorage.getItem('playlists')
+    const playlistLine = localStorage.getItem('playlists-binds-json')
+    const parsed = JSON.parse(playlistLine) ?? {}
 
-    playlistLine = playlistLine.replace(
-      new RegExp(
-        `(?<=\\")(${playlist.playlistId}:${playlist.playlistName}.*?)(?=\\")`,
-      ),
-      `${playlist.playlistId}:${playlist.playlistName}:${bind}`,
-    )
+    parsed[playlistId] = {
+      name: playlist.playlistName,
+      bind,
+    }
 
-    localStorage.setItem('playlists', playlistLine)
+    localStorage.setItem('playlists-binds-json', JSON.stringify(parsed))
 
     window.api.send('set-bind', {
       playlistId,
@@ -153,16 +152,12 @@ export const removePlaylist = (playlistId: string) => {
 
     window.api.remove(`add-track-${playlistId}`)
 
-    let playlistLine = localStorage.getItem('playlists')
+    const playlistLine = localStorage.getItem('playlists-binds-json') 
 
-    playlistLine = playlistLine.replace(
-      new RegExp(
-        `"(?<=\\")(${playlist.playlistId}:${playlist.playlistName}.*?)(?=\\")"`,
-      ),
-      '',
-    )
+    const parsed = JSON.parse(playlistLine) ?? {}
+    delete parsed[playlistId]
 
-    localStorage.setItem('playlists', playlistLine)
+    localStorage.setItem('playlists-binds-json', JSON.stringify(parsed))
 
     if (playlist.bind) {
       window.api.send('delete-bind', {
@@ -200,20 +195,6 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
         id: playlist.id,
       },
     })
-
-    const playlistLine = localStorage.getItem('playlists')
-
-    if (!playlistLine) {
-      localStorage.setItem('playlists', `"${playlist.id}:${playlist.name}"`)
-    } else {
-      localStorage.setItem(
-        'playlists',
-        playlistLine.replace(
-          new RegExp(`"(?<=\\")(${playlist.id}:${playlist.name}.*?)(?=\\")"`),
-          '',
-        ) + ` "${playlist.id}:${playlist.name}"`,
-      )
-    }
 
     window.api.receive(`add-track-${playlist.id}`, async data => {
       const state = getState()

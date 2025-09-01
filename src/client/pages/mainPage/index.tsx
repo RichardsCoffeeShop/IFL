@@ -45,23 +45,18 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
   }
 
   useEffect(() => {
-    const playlistLine = localStorage.getItem('playlists')
+    const playlists = localStorage.getItem('playlists-binds-json')
+    const parsed: { [key: string]: { name: string; bind: string } } = JSON.parse(playlists) ?? {}
 
-    if (playlistLine && playlistLine.replace(/ /g, '').length) {
-      const macthed = playlistLine.match(/(?<=\")(.*?)(?=\")/g)
+    for (const [id, data] of Object.entries(parsed)) {
+      if (!data.name || !data.bind) continue
 
-      for (const _playlist of macthed) {
-        const [id, name, bind] = _playlist.split(':')
+      setSelectedPlaylist({
+        id,
+        name: data.name,
+      })
 
-        if (!id || !name) continue
-
-        setSelectedPlaylist({
-          id,
-          name,
-        })
-
-        if (bind) setBind(id, bind)
-      }
+      if (data.bind) setBind(id, data.bind)
     }
   }, [])
 
@@ -103,7 +98,7 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
               isAddingNewPlaylist={isAddingNewPlaylist}
               refreshPlaylists={onRefreshPlaylist}
             >
-              <Text type="h1" className={classNames(styles.text)}>
+              <Text type='h1' className={classNames(styles.text)}>
                 Your playlists
               </Text>
               {filteredPlaylists.length ? (
@@ -127,7 +122,7 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
                   })}
                 </div>
               ) : (
-                <Text type="h1" className={classNames(styles.text)}>
+                <Text type='h1' className={classNames(styles.text)}>
                   Please create at least one playlist
                 </Text>
               )}
