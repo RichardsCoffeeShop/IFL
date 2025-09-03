@@ -90,8 +90,21 @@ app
     app.quit()
   })
   .on('activate', () => {
-    if (BrowserWindow.getAllWindows().length) return
-
-    createWindow(MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY, MAIN_WINDOW_WEBPACK_ENTRY)
+    const existingWindows = BrowserWindow.getAllWindows()
+    if (existingWindows.length === 0) {
+      createWindow(
+        MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+        MAIN_WINDOW_WEBPACK_ENTRY,
+      )
+    } else {
+      const mainWindow = existingWindows[0]
+      if (!mainWindow.isVisible()) {
+        mainWindow.show()
+      }
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+      mainWindow.focus()
+    }
   })
   .setName('IFL')
