@@ -1,20 +1,20 @@
-const { config } = require("dotenv");
+const { config } = require('dotenv')
 
-config();
+config()
 
 module.exports = {
   packagerConfig: {
-    name: "IFL",
-    icon: "./public/icons/app.ico",
+    name: 'IFL',
+    icon: './public/icons/app',
     asar: true,
   },
   publishers: [
     {
-      name: "@electron-forge/publisher-github",
+      name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: "RichardsCoffeeShop",
-          name: "IFL",
+          owner: 'RichardsCoffeeShop',
+          name: 'IFL',
         },
         authToken: process.env.GITHUB_TOKEN,
         prerelease: false,
@@ -24,31 +24,42 @@ module.exports = {
   ],
   makers: [
     {
-      name: "@electron-forge/maker-squirrel",
-      certificateFile: "./cert.pfx",
+      name: '@electron-forge/maker-squirrel',
+      platforms: ['win32'],
+      certificateFile: './cert.pfx',
       certificatePassword: process.env.CERTIFICATE_PASSWORD,
       config: {
-        name: "IFL",
-        exe: "IFL.exe",
-        setupExe: "IFL.exe",
+        name: 'IFL',
+        exe: 'IFL.exe',
+        setupExe: 'IFL.exe',
+      },
+    },
+     {
+      name: '@electron-forge/maker-dmg',
+      platforms: ['darwin'],
+      config: {
+        format: 'ULFO',
+        icon: './public/icons/app.icns',
+        overwrite: true,
       },
     },
   ],
   plugins: [
     [
-      "@electron-forge/plugin-webpack",
+      '@electron-forge/plugin-webpack',
       {
-        devContentSecurityPolicy: "default-src 'self' 'unsafe-eval' 'unsafe-inline' static: http: https: ws:",
-        mainConfig: "./webpack/webpack.main.config.js",
+        devContentSecurityPolicy:
+          "default-src 'self' 'unsafe-eval' 'unsafe-inline' static: http: https: ws:",
+        mainConfig: './webpack/webpack.main.config.js',
         renderer: {
-          config: "./webpack/webpack.renderer.config.js",
+          config: './webpack/webpack.renderer.config.js',
           entryPoints: [
             {
-              html: "./src/base/index.html",
-              js: "./src/base/renderer.ts",
-              name: "main_window",
+              html: './src/base/index.html',
+              js: './src/base/renderer.ts',
+              name: 'main_window',
               preload: {
-                js: "./src/preload.js",
+                js: './src/preload.js',
               },
             },
           ],
@@ -56,4 +67,4 @@ module.exports = {
       },
     ],
   ],
-};
+}

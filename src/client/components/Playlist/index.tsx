@@ -26,10 +26,14 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
     const ctrl = event.ctrlKey ? 'Control+' : ''
     const alt = event.altKey ? 'Alt+' : ''
     const shift = event.shiftKey ? 'Shift+' : ''
+    const meta = event.metaKey ? 'Meta+' : ''
 
-    if (['CONTROL', 'ALT', 'SHIFT'].includes(key)) return
+    if (['CONTROL', 'ALT', 'SHIFT', 'META'].includes(key)) return
 
-    const finalBind = `${shift}${alt}${ctrl}${key}`
+    const isAscii = key.split('').every(char => char.charCodeAt(0) <= 127)
+    if (!isAscii) return
+
+    const finalBind = `${shift}${alt}${ctrl}${meta}${key}`
 
     setStateBind(finalBind)
     setBind(playlistId, finalBind)
@@ -85,7 +89,7 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
           />
         </div>
         <div className={classNames(styles.playlistCardBody)}>
-          <div>
+           <div className={classNames(styles.center)}>
             {isCaching ? (
               <Text type='h5' className={classNames(styles.statusText)}>CACHING...</Text>
             ) : toDisplayTracks.length ? (
@@ -111,7 +115,7 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
                 ))}
               </div>
             ) : (
-              <Text type='h5' className={classNames(styles.statusText)}>Playlist is empty</Text>
+                <Text type='h1' className={classNames(styles.statusText)}>Playlist is empty</Text>
             )}
           </div>
         </div>

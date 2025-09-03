@@ -2,7 +2,7 @@ import { app, BrowserWindow, Menu, MenuItem, Tray } from 'electron'
 import { join } from 'path'
 
 export const createTray = (window: BrowserWindow) => {
-  const TRAY_ICON = appIcon()
+  const TRAY_ICON = trayIcon()
 
   const tray = new Tray(TRAY_ICON)
   const menu = new Menu()
@@ -38,10 +38,17 @@ export const createWindowEvents = (window: BrowserWindow) => {
   })
 }
 
-export const appIcon = () => {
+export const trayIcon = () => {
   return app.isPackaged
-    ? join(__dirname, '..', 'public/icons', 'app.png')
-    : join(process.cwd(), './public/icons', 'app.png')
+    ? join(__dirname, '..', 'public/icons', 'tray.png')
+    : join(process.cwd(), './public/icons', 'tray.png')
+}
+
+export const appIcon = () => {
+  const iconExtension = process.platform === 'darwin' ? 'icns' : 'png'
+  return app.isPackaged
+    ? join(__dirname, '..', 'public/icons', `app.${iconExtension}`)
+    : join(process.cwd(), './public/icons', `app.${iconExtension}`)
 }
 
 export const createWindow = (preloadPath: string, urlPath: string) => {
