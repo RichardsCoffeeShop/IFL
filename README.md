@@ -17,6 +17,14 @@
 
 --------
 
+## How to fix "App Is Damaged And Can't Be Opened"
+This is because I have no intentions of properly signing the application with Apple ID.
+
+To bypass this error, find the application location (in most cases should be "Macintosh Hd/Applications/") and run following command:
+```sh
+xattr -dr com.apple.quarantine IFL.app
+```
+
 #### Features
 
 IFL - is a program build with electron & react with redux.
