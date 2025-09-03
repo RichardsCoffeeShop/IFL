@@ -1,8 +1,16 @@
+.mainPage {
+  min-height: 100vh;
+  padding-bottom: 20px;
+}
+
 .main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   place-items: center;
   place-content: center;
+  min-height: 80vh;
+  gap: 20px;
+  padding: 20px;
 }
 
 .container {
@@ -65,7 +73,8 @@
   align-items: center;
   flex-direction: column;
   gap: 25px;
-  height: 450px;
+  min-height: 80vh;
+  padding: 20px;
 }
 
 .playlistCard {

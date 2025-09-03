@@ -89,7 +89,7 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
           />
         </div>
         <div className={classNames(styles.playlistCardBody)}>
-          <div>
+           <div className={classNames(styles.center)}>
             {isCaching ? (
               <Text type='h5' className={classNames(styles.statusText)}>CACHING...</Text>
             ) : toDisplayTracks.length ? (
@@ -115,7 +115,7 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
                 ))}
               </div>
             ) : (
-              <Text type='h5' className={classNames(styles.statusText)}>Playlist is empty</Text>
+                <Text type='h1' className={classNames(styles.statusText)}>Playlist is empty</Text>
             )}
           </div>
         </div>
