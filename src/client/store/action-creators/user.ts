@@ -4,6 +4,8 @@ import { Playlist, Track, userAction, userActions } from 'shared/types/user'
 import axios from 'axios'
 import { refreshToken } from 'client/utils/funcs'
 
+const LIKED_SONGS_PLAYLIST_ID = 'liked-songs-spotify-playlist'
+
 interface options {
   req?: boolean
   code?: string
@@ -33,9 +35,13 @@ const fetchAllTracks = async (
   }
 
   const offset = +new URL(options.next).searchParams.get('offset')
-  const { body } = await window.api.spotify.getPlaylistTracks(playlistId, {
-    offset,
-  })
+  let body: SpotifyApi.UsersSavedTracksResponse | SpotifyApi.PlaylistTrackResponse
+
+  if (playlistId !== LIKED_SONGS_PLAYLIST_ID) {
+    body = (await window.api.spotify.getPlaylistTracks(playlistId, {offset})).body
+  } else {
+    body = (await window.api.spotify.getMySavedTracks({ offset, limit: 50 })).body
+  }
 
   for (const item of body.items) {
     const { track } = item
@@ -49,6 +55,7 @@ const fetchAllTracks = async (
         .slice(0, 2)
         .map(artist => `${artist.name}`)
         .join(', '),
+        added_at: item.added_at,
     })
   }
 
@@ -107,6 +114,7 @@ export const setBind = (playlistId: string, bind: string) => {
       name: playlist.playlistName,
       bind,
       images: playlist.playlistImages,
+      isSpotifyGeneratePlaylist: playlist.isSpotifyGeneratePlaylist,
     }
 
     localStorage.setItem('playlists-binds-json', JSON.stringify(parsed))
@@ -188,6 +196,7 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
         playlistImages: playlist.images,
         error: null,
         tracks: [],
+        isSpotifyGeneratePlaylist: playlist.isSpotifyGeneratePlaylist,
       },
     })
 
@@ -262,9 +271,13 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
           } playlist!!`,
         })
 
-        await window.api.spotify.addTrackToPlaylist(playlist.id, [
-          body.item.uri,
-        ])
+        if (playlist.id === LIKED_SONGS_PLAYLIST_ID) {
+          await window.api.spotify.addToMySavedTracks([body.item.uri.split(':')[2]])
+        } else {
+          await window.api.spotify.addTrackToPlaylist(playlist.id, [
+            body.item.uri,
+          ])
+        }
 
         dispatch({
           type: userActions.PLAYLIST_ADD_TRACK_SUCCESS,
@@ -279,6 +292,7 @@ export const setSelectedPlaylist = (playlist: Playlist) => {
                 ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png'
                 : body.item.album.images[0].url,
               name: body.item.name,
+              added_at: new Date().toISOString(),
             },
           },
         })
@@ -316,7 +330,14 @@ export const fetchPlaylistTracks = (playlistId: string) => {
 
       await refreshToken(state, dispatch)
 
-      const { body } = await window.api.spotify.getPlaylistTracks(playlistId)
+      let body: SpotifyApi.UsersSavedTracksResponse | SpotifyApi.PlaylistTrackResponse
+
+      if (playlistId !== LIKED_SONGS_PLAYLIST_ID) {
+        body = (await window.api.spotify.getPlaylistTracks(playlistId)).body
+      } else {
+        body = (await window.api.spotify.getMySavedTracks({ limit: 50 })).body
+      }
+
       const options: secondOptions = {
         next: body.next,
         tracks: [],
@@ -334,6 +355,7 @@ export const fetchPlaylistTracks = (playlistId: string) => {
             .slice(0, 3)
             .map(artist => `${artist.name}`)
             .join(', '),
+            added_at: item.added_at,
         })
       }
 
@@ -368,7 +390,6 @@ export const fetchPlaylists = () => {
           },
         },
       )
-
       if (!request.data.items || !request.data.items.length || !request.data.href) {
         throw new Error(request.data.error.message || 'Unknown error')
       }
@@ -382,6 +403,13 @@ export const fetchPlaylists = () => {
           return { id: item.id, name: item.name, images: item.images ?? [{ url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png' }] }
         },
       )
+
+      formatedPlaylists.push({
+        id: LIKED_SONGS_PLAYLIST_ID,
+        name: 'Favourites',
+        images: [{ url: 'static://favourites.png' }],
+        isSpotifyGeneratePlaylist: true,
+      })
 
       dispatch({
         type: userActions.FETCH_PLAYLISTS,

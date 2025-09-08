@@ -18,8 +18,10 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         'playlist-modify-public',
         'playlist-read-private',
         'user-read-currently-playing',
+        'user-library-read',
+        'user-library-modify',
       ],
-      'state'
+      'state',
     )
 
     window.api.server.createServer()

@@ -11,6 +11,8 @@ type RefreshAccessToken = ReturnType<typeof instance.refreshAccessToken>
 type GetPlayingTrack = ReturnType<typeof instance.getMyCurrentPlayingTrack>
 type AddTrackToPlaylist = ReturnType<typeof instance.addTracksToPlaylist>
 type GetUserPlaylists = ReturnType<typeof instance.getUserPlaylists>
+type GetMySavedTracks = ReturnType<typeof instance.getMySavedTracks>
+type AddToMySavedTracks = ReturnType<typeof instance.addToMySavedTracks>
 
 declare global {
   interface Window {
@@ -31,6 +33,8 @@ declare global {
       }
       spotify: {
         getUserPlaylists(): GetUserPlaylists
+        getMySavedTracks(options?: PaginationMarketOptions): GetMySavedTracks
+        addToMySavedTracks(tracks: string | string[]): AddToMySavedTracks
         createAuthUrl(scopes: string[], state: string): string
         authCodeGrant(code: string): AuthCodeGrant
 
