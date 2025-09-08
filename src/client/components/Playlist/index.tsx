@@ -108,10 +108,10 @@ export const PlaylistComponent: React.FC<PlaylistProps> = ({
                     />
                     <div className={classNames(styles.trackInfo)}>
                       <Text type='h6' className={classNames(styles.trackArtist)}>
-                        {track.artists}
+                        {track.artists.slice(0, 35)}
                       </Text>
                       <Text type='h6' className={classNames(styles.trackName)}>
-                        {track.name}
+                        {track.name.slice(0, 40)}
                       </Text>
                     </div>
                   </div>
