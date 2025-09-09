@@ -32,6 +32,12 @@ contextBridge.exposeInMainWorld('api', {
     getUserPlaylists() {
       return SpotifyWeb.getUserPlaylists()
     },
+    addToMySavedTracks(tracks) {
+      return SpotifyWeb.addToMySavedTracks(tracks)
+    },
+    getMySavedTracks(options) {
+      return SpotifyWeb.getMySavedTracks(options)
+    },
     createAuthUrl(scopes, state) {
       return SpotifyWeb.createAuthorizeURL(scopes, state)
     },

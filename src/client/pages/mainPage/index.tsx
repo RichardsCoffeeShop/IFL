@@ -43,7 +43,7 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
 
   useEffect(() => {
     const playlists = localStorage.getItem('playlists-binds-json')
-    const parsed: { [key: string]: { name: string; bind: string, images: { url: string }[] } } = JSON.parse(playlists) ?? {}
+    const parsed: { [key: string]: { name: string; bind: string, images: { url: string }[], isSpotifyGeneratePlaylist?: boolean } } = JSON.parse(playlists) ?? {}
 
     for (const [id, data] of Object.entries(parsed)) {
       if (!data.name || !data.bind) continue
@@ -52,6 +52,7 @@ const MainPage: React.FC<MainPageProps> = ({}: MainPageProps) => {
         id,
         name: data.name,
         images: data.images,
+        isSpotifyGeneratePlaylist: data.isSpotifyGeneratePlaylist,
       })
 
       if (data.bind) setBind(id, data.bind)

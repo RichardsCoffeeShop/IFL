@@ -11,7 +11,8 @@ export interface userState {
 export interface Track {
   artists: string
   img: string
-  name: string
+  name: string,
+  added_at: string
 }
 
 export interface Playlist {
@@ -19,7 +20,8 @@ export interface Playlist {
   id: string
   images: {
     url: string
-  }[]
+  }[],
+   isSpotifyGeneratePlaylist?: boolean
 }
 
 export interface SelectedPlaylist {
@@ -32,6 +34,7 @@ export interface SelectedPlaylist {
   tracks: Track[]
   bind: string
   error?: string
+  isSpotifyGeneratePlaylist?: boolean
 }
 
 export interface LoginUserSuccessResponse {

@@ -13,7 +13,7 @@
 - [x] Allow adding songs to private playlists
 - [x] Enhanced UI
 - [x] Bug fixes
-- [ ] Bind to remove current song from playlist (or make it work on the same keybind, idk)
+- [x] Allow adding songs to 'Liked Songs' playlist
 
 --------
 
