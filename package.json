@@ -1,11 +1,11 @@
 {
   "name": "ifl",
   "productName": "IFL",
-  "version": "1.4.5",
+  "version": "1.5.5",
   "repository": {
     "url": "https://github.com/RichardsCoffeeShop/IFL"
   },
-  "description": "My Electron application description",
+  "description": "A desktop client for Spotify to simply add music to playlists.",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
